@@ -27,7 +27,7 @@ class QuestionController extends Controller
             'category_id' => $request->category_id,
             'user_id' => auth('sanctum')->id(),
         ]);
-        return $this->success($question);
+        return response()->success($question);
     }
 
     /**
@@ -39,7 +39,7 @@ class QuestionController extends Controller
     public function show(int $id): JsonResponse
     {
         $questions = Question::query()->where('category_id', $id)->inRandomOrder()->limit(10)->get();
-        return $this->success($questions);
+        return response()->success($questions);
     }
 
     /**
@@ -63,5 +63,10 @@ class QuestionController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function answer(int $id, Request $request)
+    {
+        Question::query()->find($id)->where('answer', $request->answer);
     }
 }
