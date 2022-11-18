@@ -22,10 +22,9 @@ class AuthController extends Controller
     {
         $data = $request->validated();
         $data['password'] = Hash::make($data['password']);
-        $data['username'] = strstr($data['email'], '@', true);
         $user = User::query()->create($data);
         $token = $user->createToken(User::USER_TOKEN);
-        return $this->success([
+        return response()->success([
             'user' => $user,
             'token' => $token->plainTextToken,
         ],'User has been register successfully', 201);
@@ -41,11 +40,11 @@ class AuthController extends Controller
         $isValid = $this->isValidCredential($request);
         if (!$isValid['success'])
         {
-            return $this->error($isValid['message'], ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
+            return response()->error($isValid['message'], ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
         }
         $user = $isValid['user'];
         $token = $user->createToken(User::USER_TOKEN);
-        return $this->success([
+        return response()->success([
             'user' => $user,
             'token' => $token->plainTextToken,
         ],'Login Successfully');
@@ -86,7 +85,7 @@ class AuthController extends Controller
      */
     public function loginWithToken(): JsonResponse
     {
-        return $this->success(
+        return response()->success(
             auth()->user(),
             'Login Successfully'
         );
@@ -100,7 +99,7 @@ class AuthController extends Controller
     public function logout(Request $request): JsonResponse
     {
         $user = User::query()->find(auth()->id())->currentAccessToken()->delete();
-        return $this->success(
+        return response()->success(
             null,
             "Logout successfully"
         );
