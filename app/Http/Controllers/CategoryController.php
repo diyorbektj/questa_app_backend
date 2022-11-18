@@ -16,7 +16,7 @@ class CategoryController extends Controller
      */
     public function index(): JsonResponse
     {
-        return $this->success(Category::all());
+        return response()->success(Category::all());
     }
 
     /**
@@ -28,7 +28,7 @@ class CategoryController extends Controller
     public function store(CreateCategoryRequest $request): JsonResponse
     {
         $category = Category::query()->create($request->validated());
-        return $this->success($category);
+        return response()->success($category);
     }
 
     /**
@@ -41,7 +41,7 @@ class CategoryController extends Controller
     public function update(UpdateCategoryRequest $request, int $id): JsonResponse
     {
         $category = Category::query()->firstOrFail($id)->update($request->validated());
-        return $this->success($category);
+        return response()->success($category);
     }
 
     /**
@@ -54,6 +54,6 @@ class CategoryController extends Controller
     public function destroy(int $id, Category $category): JsonResponse
     {
         $category->query()->find($id)->delete();
-        return $this->success([], "Category deleted!");
+        return response()->success([], "Category deleted!");
     }
 }
