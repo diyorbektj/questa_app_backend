@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateQuestionRequest;
 use App\Models\Question;
+use App\Models\QuestionAnswer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -65,8 +66,18 @@ class QuestionController extends Controller
         //
     }
 
-    public function answer(int $id, Request $request)
+    public function checkAnswer(Request $request)
     {
-        Question::query()->find($id)->where('answer', $request->answer);
+        $question = Question::query()->find($request->id);
+           if ($question){
+               $answer = $question->where('id', $request->id)->where('answer', $request->answer)->first();
+               $check = QuestionAnswer::query()->create([
+                   'user_id' => auth('sanctum')->id(),
+                   'question_id' => $question->id,
+                   'answer' => $request->answer,
+                   'is_true' => (bool)$answer,
+               ]);
+           }
+        return $question ? response()->success($check) : response()->error("Not found");
     }
 }

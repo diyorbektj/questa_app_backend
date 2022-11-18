@@ -30,4 +30,5 @@ Route::controller(\App\Http\Controllers\CategoryController::class)->prefix('cate
 Route::controller(\App\Http\Controllers\QuestionController::class)->prefix('question')->group(function () {
     Route::post('/create', 'store');
     Route::get('/category/{id}', 'show');
+    Route::post('/check', 'checkAnswer' );
 });
